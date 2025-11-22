@@ -42,7 +42,7 @@ Deep-Learning-XAI-Research/
 
 ## Design Pipeline
 
-![Framework Architecture](docs/architecture_diagram.png)
+![Framework Architecture](images/1.png)
 
 The framework follows a structured pipeline:
 
