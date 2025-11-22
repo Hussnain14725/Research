@@ -42,18 +42,10 @@ Deep-Learning-XAI-Research/
 
 ## Design Pipeline
 
-![Framework Architecture](images/1.png)
-
 The framework follows a structured pipeline:
 
-```
-Data Loading → Preprocessing → Model Training → XAI Analysis → Insights
-     ↓              ↓               ↓             ↓           ↓
-  Datasets     Normalization    Architectures  Grad-CAM   Performance
- (MNIST,       Augmentation    (MobileNetV2,   LIME       Metrics
- Fashion,                      Efficient CNN,  SHAP       Interpretability
- CIFAR-10)                     ResNet18)
-```
+![Framework Architecture](images/2.png)
+
 
 Key components:
 - **DataProcessor**: Handles dataset loading, resizing, normalization, and splitting
