@@ -1,16 +1,5 @@
-Here's the updated README.md without the sections you requested to remove:
 
 # Deep Learning Research with Explainable AI Framework
-
-## Table of Contents
-1. [Abstract](#abstract)
-2. [Repository Structure](#repository-structure)
-3. [Design Pipeline](#design-pipeline)
-4. [Model Architectures](#model-architectures)
-5. [Experimental Results](#experimental-results)
-6. [Explainable AI Analysis](#explainable-ai-analysis)
-7. [Research Insights](#research-insights)
-8. [Future Work](#future-work)
 
 ## Abstract
 
@@ -18,27 +7,6 @@ This project implements a comprehensive deep learning research framework that sy
 
 The system compares three custom CNN architectures—MobileNetV2, Efficient CNN, and ResNet18—across three datasets (MNIST, Fashion-MNIST, CIFAR-10) and integrates multiple XAI methods including Grad-CAM, LIME, and SHAP for model interpretability. The modular design ensures reproducibility and extensibility for research purposes.
 
-## Repository Structure
-
-```
-Deep-Learning-XAI-Research/
-├── main.py                      # Interactive menu system and entry point
-├── model_manager.py             # Model persistence and management
-├── data_processor.py            # Dataset loading and preprocessing
-├── model_builder.py             # CNN architecture implementations
-├── model_trainer.py             # Training pipeline with callbacks
-├── xai_analyzer.py              # Explainable AI methods
-├── consolidated_visualizer.py   # Comparative analysis and visualization
-├── requirements.txt             # Python dependencies
-├── README.md                    # Project documentation
-├── docs/                        # Documentation and images
-│   ├── architecture_diagram.png
-│   ├── training_curves.png
-│   ├── gradcam_examples.png
-│   └── confusion_matrix.png
-└── saved_models/                # Auto-created model storage
-    └── training_history/        # Training metrics and history
-```
 
 ## Design Pipeline
 
@@ -138,7 +106,7 @@ Residual Connection (if dimensions match)
 
 ![Efficient CNN Architecture](docs/efficient_cnn_architecture.png)
 
-# Efficient CNN Architecture: Technical Overview
+
 
 ## Architecture Specification
 
@@ -211,7 +179,7 @@ This architecture achieves the best performance-efficiency trade-off, consistent
 
 ![ResNet18 Architecture](docs/resnet18_architecture.png)
 
-# Custom ResNet18 Architecture: Technical Overview
+
 
 ## Architecture Specification
 
@@ -299,13 +267,13 @@ This architecture provides a robust and well-understood baseline, demonstrating 
 
 ### Training Dynamics
 
-![Training Curves Comparison](docs/training_curves_comparison.png)
+![Training Curves Comparison](images/Figure_1.png)
 
 *Consolidated training history showing accuracy and loss curves across all model-dataset combinations.*
 
 ### Performance Comparison
 
-![Performance Charts](docs/performance_comparison.png)
+![Performance Charts](images/testaccuracy.png)
 
 *Comparative analysis of model performance across different datasets and metrics.*
 
@@ -313,20 +281,21 @@ This architecture provides a robust and well-understood baseline, demonstrating 
 
 ### Grad-CAM Visualizations
 
-![Grad-CAM Examples](docs/gradcam_examples.png)
-
+![Grad-CAM Examples](images/cifar_gradm.png)
+![Grad-CAM Examples](images/cifar_gradf.png)
+![Grad-CAM Examples](images/cifar_grade.png)
 *Grad-CAM visualizations showing model attention patterns across different datasets.*
 
 Grad-CAM (Gradient-weighted Class Activation Mapping) provides visual explanations for model decisions by highlighting important regions in input images.
 
 **Example Applications:**
-- MNIST: Models focus on digit stroke patterns and distinctive features
-- Fashion-MNIST: Attention on clothing silhouettes and textures
 - CIFAR-10: Focus on object contours and class-discriminative regions
 
 ### Misclassification Analysis
 
-![Confusion Matrix](docs/confusion_matrix.png)
+![Misclassification](images/miss_cifar_m.png)
+![Misclassification](images/miss_cifar_f.png)
+![Misclassification](images/miss_cifar_e.png)
 
 *Confusion matrix showing systematic error patterns in model predictions.*
 
