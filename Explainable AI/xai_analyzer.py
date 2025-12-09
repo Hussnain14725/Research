@@ -17,6 +17,7 @@ HAS_SHAP = False
 
 try:
     from lime import lime_image
+    from skimage.segmentation import mark_boundaries
     HAS_LIME = True
 except ImportError:
     HAS_LIME = False
@@ -182,6 +183,14 @@ class XAIAnalyzer:
 
         plt.suptitle("Grad-CAM: Model Attention Visualizations", fontsize=16, fontweight='bold')
         plt.tight_layout()
+        try:
+            import os
+            if not os.path.exists('images'):
+                os.makedirs('images')
+            plt.savefig(f'images/{dataset_name}_grade.png')
+            print(f" Saved Grad-CAM to images/{dataset_name}_grade.png")
+        except Exception as e:
+            print(f" Failed to save plot: {e}")
         plt.show()
 
     def misclassification_analysis(self, x_test, y_test, max_examples=6):
@@ -255,10 +264,137 @@ class XAIAnalyzer:
 
         plt.suptitle("Misclassification Analysis", fontsize=16, fontweight='bold')
         plt.tight_layout()
+        try:
+            import os
+            if not os.path.exists('images'):
+                os.makedirs('images')
+            # Use first letter of dataset name for filename to match README
+            # mnist -> m, fashion -> f, cifar10 -> c
+            suffix = dataset_name[0]
+            plt.savefig(f'images/miss_e_{suffix}.png')
+            print(f" Saved misclassification analysis to images/miss_e_{suffix}.png")
+        except Exception as e:
+            print(f" Failed to save plot: {e}")
         plt.show()
         
         # Print confusion summary
         self._print_confusion_summary(y_test, y_pred)
+
+    def lime_analysis(self, x_test, y_test, dataset_name, num_samples=3):
+        """Perform LIME analysis on selected samples"""
+        if not HAS_LIME:
+            print("\n LIME not installed. Skipping LIME analysis.")
+            return
+
+        print("\n" + "=" * 60)
+        print(" LIME ANALYSIS")
+        print("=" * 60)
+
+        explainer = lime_image.LimeImageExplainer()
+        
+        # Select a few random samples
+        indices = np.random.choice(len(x_test), num_samples, replace=False)
+        
+        for i, idx in enumerate(indices):
+            img = x_test[idx]
+            true_label = y_test[idx]
+            
+            # LIME requires double format
+            img_double = img.astype('double')
+            
+            print(f" Explaining sample {i+1}/{num_samples} (Class: {self.class_names[int(true_label)]})...")
+            
+            try:
+                explanation = explainer.explain_instance(
+                    img_double, 
+                    self.model.predict, 
+                    top_labels=5, 
+                    hide_color=0, 
+                    num_samples=1000
+                )
+                
+                temp, mask = explanation.get_image_and_mask(
+                    explanation.top_labels[0], 
+                    positive_only=True, 
+                    num_features=5, 
+                    hide_rest=False
+                )
+                
+                plt.figure(figsize=(8, 4))
+                
+                # Original image
+                plt.subplot(1, 2, 1)
+                if dataset_name in ["mnist", "fashion"]:
+                    plt.imshow(img.squeeze(), cmap='gray')
+                else:
+                    plt.imshow(img)
+                plt.title(f"Original: {self.class_names[int(true_label)]}")
+                plt.axis('off')
+                
+                plt.tight_layout()
+                try:
+                    import os
+                    if not os.path.exists('images'):
+                        os.makedirs('images')
+                    plt.savefig(f'images/lime_{dataset_name}_{i}.png')
+                except Exception as e:
+                    print(f" Failed to save plot: {e}")
+                plt.show()t(1, 2, 2)
+                if dataset_name in ["mnist", "fashion"]:
+                    # For grayscale, we need to handle the mask carefully
+                    plt.imshow(mark_boundaries(temp / 2 + 0.5, mask))
+                else:
+                    plt.imshow(mark_boundaries(temp / 2 + 0.5, mask))
+                    
+                plt.title(f"LIME Explanation")
+                plt.axis('off')
+                
+                plt.tight_layout()
+                plt.show()
+                
+            except Exception as e:
+                print(f" LIME failed for sample {i}: {e}")
+
+    def shap_analysis(self, x_train, x_test, dataset_name, num_samples=5):
+        """Perform SHAP analysis"""
+        if not HAS_SHAP:
+            print("\n SHAP not installed. Skipping SHAP analysis.")
+            # Plot SHAP values
+            # For multi-class, shap_values is a list of arrays, one for each class
+            # We visualize the SHAP values for the predicted class
+            
+            shap.image_plot(shap_values, -test_images, show=False)
+            try:
+                import os
+                if not os.path.exists('images'):
+                    os.makedirs('images')
+                plt.savefig(f'images/shap_{dataset_name}.png')
+                print(f" Saved SHAP analysis to images/shap_{dataset_name}.png")
+            except Exception as e:
+                print(f" Failed to save plot: {e}")
+            plt.show()
+
+        # Select background for SHAP (subset of training data)
+        background = x_train[np.random.choice(x_train.shape[0], 100, replace=False)]
+        
+        # Select test samples
+        test_images = x_test[:num_samples]
+        
+        try:
+            # Use DeepExplainer for Deep Learning models
+            # Note: SHAP DeepExplainer can be slow and memory intensive
+            explainer = shap.DeepExplainer(self.model, background)
+            shap_values = explainer.shap_values(test_images)
+            
+            # Plot SHAP values
+            # For multi-class, shap_values is a list of arrays, one for each class
+            # We visualize the SHAP values for the predicted class
+            
+            shap.image_plot(shap_values, -test_images)
+            
+        except Exception as e:
+            print(f" SHAP analysis failed: {e}")
+            print(" Note: SHAP DeepExplainer requires TensorFlow 1.x compatibility or specific versions.")
 
     def _print_confusion_summary(self, y_test, y_pred):
         """Print summary of confusion patterns"""
@@ -284,7 +420,7 @@ class XAIAnalyzer:
                 count = cm2[true_class, pred_class]
                 print(f"   {self.class_names[true_class]} → {self.class_names[pred_class]}: {count} samples")
 
-    def run_complete_xai_analysis(self, x_test, y_test, dataset_name):
+    def run_complete_xai_analysis(self, x_test, y_test, dataset_name, x_train=None):
      
         print("\n" + "=" * 80)
         print(" COMPREHENSIVE XAI ANALYSIS STARTED")
@@ -301,9 +437,22 @@ class XAIAnalyzer:
             self.grad_cam_analysis(x_test[:5], y_test[:5], dataset_name, num_samples=5)
         except Exception as e:
             print(f" Grad-CAM failed: {e}")
+            
+        try:
+            # 3. LIME analysis
+            self.lime_analysis(x_test, y_test, dataset_name)
+        except Exception as e:
+            print(f" LIME analysis failed: {e}")
+
+        if x_train is not None:
+            try:
+                # 4. SHAP analysis
+                self.shap_analysis(x_train, x_test, dataset_name)
+            except Exception as e:
+                print(f" SHAP analysis failed: {e}")
         
         try:
-            # 3. Misclassification analysis
+            # 5. Misclassification analysis
             self.misclassification_analysis(x_test, y_test, max_examples=6)
         except Exception as e:
             print(f" Misclassification analysis failed: {e}")

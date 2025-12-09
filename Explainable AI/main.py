@@ -14,9 +14,9 @@ from consolidated_visualizer import ConsolidatedVisualizer
 logging.getLogger("tensorflow").setLevel(logging.ERROR)
 
 def print_banner():
-   
+    """Print welcome banner"""
     print("\n" + "=" * 80)
-    print(" Model WITH EXPLAINABLE AI (XAI)")
+    print(" DEEP LEARNING RESEARCH WITH EXPLAINABLE AI (XAI)")
     print("=" * 80)
     print("A Comprehensive Framework for CNN Architecture Evaluation")
     print("with Integrated Model Interpretability")
@@ -29,7 +29,7 @@ def print_menu():
     print("2.  Compare All Models (Consolidated Analysis)")
     print("3.  Run XAI Analysis on Pre-trained Model")
     print("4.  Generate Research Summary Report")
-    print("5.  List Available Pre-trained Models")
+    print("5.   List Available Pre-trained Models")
     print("6.  Quick Start (Complete Pipeline)")
     print("7.  Exit")
 
@@ -50,7 +50,7 @@ def get_user_choice(prompt, valid_options, default=None):
             print(f" Error: {e}")
 
 def single_model_analysis():
-    
+    """Train/load single model and run comprehensive XAI analysis"""
     print("\n" + "=" * 60)
     print(" SINGLE MODEL ANALYSIS WITH XAI")
     print("=" * 60)
@@ -117,7 +117,7 @@ def single_model_analysis():
     
     # Run comprehensive XAI analysis
     xai = XAIAnalyzer(model, class_names)
-    xai.run_complete_xai_analysis(x_test_norm, y_test, dataset_name)
+    xai.run_complete_xai_analysis(x_test_norm, y_test, dataset_name, x_train_norm)
     
     print(f"\n Single model analysis completed for {model_type} on {dataset_name}")
 
@@ -196,10 +196,10 @@ def xai_analysis_pretrained():
     
     # Run XAI analysis
     xai = XAIAnalyzer(model, class_names)
-    xai.run_complete_xai_analysis(x_test_norm, y_test, dataset_name)
+    xai.run_complete_xai_analysis(x_test_norm, y_test, dataset_name, x_train_norm)
 
 def research_summary():
-   
+    """Generate comprehensive research summary"""
     print("\n" + "=" * 60)
     print(" RESEARCH SUMMARY REPORT")
     print("=" * 60)
@@ -291,7 +291,7 @@ def quick_start():
     print(f"   Macro F1: {macro_f1:.4f}")
 
 def main():
-    
+    """Main program loop"""
     print_banner()
     
     while True:
@@ -313,7 +313,8 @@ def main():
             elif choice == "6":
                 quick_start()
             elif choice == "7":
-                print("\n Exiting......")
+                print("\n Thank you for using the Deep Learning Research Framework!")
+                print("   Goodbye!")
                 break
             
             # Pause before showing menu again
