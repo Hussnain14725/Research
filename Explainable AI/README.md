@@ -104,7 +104,7 @@ Residual Connection (if dimensions match)
 
 ### 2. Efficient CNN
 
-![Efficient CNN Architecture](docs/efficient_cnn_architecture.png)
+
 
 
 
@@ -175,9 +175,8 @@ MaxPool (2×2)
 - Balanced architecture for research and deployment
 
 This architecture achieves the best performance-efficiency trade-off, consistently outperforming other models while maintaining reasonable computational requirements.
-### 3. Custom ResNet18
+### 3. ResNet18
 
-![ResNet18 Architecture](docs/resnet18_architecture.png)
 
 
 
@@ -281,8 +280,8 @@ This architecture provides a robust and well-understood baseline, demonstrating 
 
 ### Grad-CAM Visualizations
 
-![Grad-CAM Examples](images/cifar_gradm.png)
-![Grad-CAM Examples](images/cifar_gradf.png)
+![Grad-CAM Examples](images/mnist_grade.png)
+![Grad-CAM Examples](images/fashion_grade.png)
 ![Grad-CAM Examples](images/cifar_grade.png)
 *Grad-CAM visualizations showing model attention patterns across different datasets.*
 
@@ -293,9 +292,9 @@ Grad-CAM (Gradient-weighted Class Activation Mapping) provides visual explanatio
 
 ### Misclassification Analysis
 
-![Misclassification](images/miss_cifar_m.png)
-![Misclassification](images/miss_cifar_f.png)
-![Misclassification](images/miss_cifar_e.png)
+![Misclassification](images/miss_e_m.png)
+![Misclassification](images/miss_e_f.png)
+![Misclassification](images/miss_e_c.png)
 
 *Confusion matrix showing systematic error patterns in model predictions.*
 
